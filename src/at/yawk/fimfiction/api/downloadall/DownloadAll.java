@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import at.yawk.fimfiction.api.AccountInternetAccess;
 import at.yawk.fimfiction.api.DownloadType;
+import at.yawk.fimfiction.api.JSONStoryMeta;
 import at.yawk.fimfiction.api.SearchRequest;
 import at.yawk.fimfiction.api.StoryAccess;
 import at.yawk.fimfiction.api.actions.Downloader;
@@ -161,6 +162,9 @@ public class DownloadAll {
                             for (int i = 0; i < 3; i++) {
                                 try {
                                     Downloader.downloadStory(story, outputFile, DownloadType.EPUB, ac);
+                                    if (story.getMeta() instanceof JSONStoryMeta) {
+                                        outputFile.setLastModified(((JSONStoryMeta) story.getMeta()).getModificationDate().getTime());
+                                    }
                                     break;
                                 } catch (IOException e) {}
                             }
