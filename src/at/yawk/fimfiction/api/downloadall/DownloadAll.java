@@ -12,10 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import at.yawk.fimfiction.api.AccountInternetAccess;
 import at.yawk.fimfiction.api.DownloadType;
+import at.yawk.fimfiction.api.GeneralStoryMeta;
 import at.yawk.fimfiction.api.JSONStoryMeta;
 import at.yawk.fimfiction.api.SearchRequest;
 import at.yawk.fimfiction.api.StoryAccess;
-import at.yawk.fimfiction.api.StoryMeta;
 import at.yawk.fimfiction.api.actions.Downloader;
 import at.yawk.fimfiction.api.factories.SearchRequestFactory;
 import at.yawk.fimfiction.api.parsers.CompatibilitySearchIterable;
@@ -95,7 +95,7 @@ public class DownloadAll {
     
     private static String progressBar(int done, int total) {
         final char[] chars = repeat(' ', MODE_WIDTH).toCharArray();
-        for (int i = 0; i < MODE_WIDTH * done / total; i++) {
+        for (int i = 0; i < MODE_WIDTH * done / Math.max(total, 1); i++) {
             chars[i] = '=';
         }
         final char[] label = (done + "/" + total).toCharArray();
@@ -163,7 +163,7 @@ public class DownloadAll {
                             for (int i = 0; i < 3; i++) {
                                 try {
                                     Downloader.downloadStory(story, outputFile, DownloadType.EPUB, ac);
-                                    StoryMeta mta = story.getMeta();
+                                    GeneralStoryMeta mta = story.getMeta();
                                     if (mta instanceof JSONStoryMeta && ((JSONStoryMeta) mta).getModificationDate().getTime() > 0) {
                                         outputFile.setLastModified(((JSONStoryMeta) mta).getModificationDate().getTime());
                                     }
